@@ -22,3 +22,5 @@ Gorden is a sleek and powerful link-shortening platform tailored exclusively for
 Gorden is more than just a link shortener—it's a robust tool for admins to optimize and secure their digital presence. Whether you're tracking marketing campaigns, managing internal links, or securing sensitive URLs, Gorden ensures you're always in control.  
 
 With Gorden, shorten smarter, analyze deeper, and manage better. 
+
+![image](https://github.com/user-attachments/assets/9f57e645-1942-479e-a492-90f4e1ea79a9)
