@@ -23,4 +23,6 @@ Gorden is more than just a link shortener—it's a robust tool for admins to opt
 
 With Gorden, shorten smarter, analyze deeper, and manage better. 
 
+
+Design Diagram
 ![image](https://github.com/user-attachments/assets/9f57e645-1942-479e-a492-90f4e1ea79a9)
