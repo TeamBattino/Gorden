@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 // App struct
@@ -41,4 +43,42 @@ func (a *App) shutdown(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+// This is a cool fuction that returns a string
+func (a *App) CoolFunction() string {
+	return "This is a cool function"
+}
+
+type Message struct {
+	Content string
+	Author  string
+	UUID    uuid.UUID
+}
+
+type PlainMessage struct {
+	Content string
+	Author  string
+}
+
+var chats []Message
+
+func (a *App) AddToChats(i PlainMessage) {
+	chats = append(chats, Message{
+		Content: i.Content,
+		Author:  i.Author,
+		UUID:    uuid.New(),
+	})
+}
+
+func (a *App) GetChats() []Message {
+	return chats
+}
+
+func (a *App) InitValues() {
+	chats = []Message{
+		{"hello", "world", uuid.New()},
+		{"how", "are", uuid.New()},
+		{"you", "good", uuid.New()},
+	}
 }
