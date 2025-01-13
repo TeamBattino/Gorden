@@ -63,7 +63,7 @@ app.get("/roomUpdates", async (req, res) => {
     }
 });
 
-app.get("/roomMessages", (req, res) => {
+app.get("/roomMessages", async (req, res) => {
     try {
         const messages = await getRoomMessages(req.query.roomId as string);
         res.status(200).json(messages);
