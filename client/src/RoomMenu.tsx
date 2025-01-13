@@ -16,7 +16,8 @@ function RoomMenu({ setRoom }: RoomMenuProps) {
   console.log(window.ipcRenderer);
 
   const getRoom = async (roomId: string) => {
-    const response = await getRequest<Room>(`/rooms/${roomId}`);
+    const response = await getRequest<Room>(`/room?id=${roomId}`);
+    console.log(response);
 
     if (response.status === 200) {
       setRoom(response.data);
@@ -24,9 +25,9 @@ function RoomMenu({ setRoom }: RoomMenuProps) {
   };
 
   const createRoom = async () => {
-    const response = await postRequest<Room>('/rooms');
+    const response = await postRequest<Room>('/room');
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       setRoom(response.data);
     }
   };
@@ -38,12 +39,19 @@ function RoomMenu({ setRoom }: RoomMenuProps) {
   return (
     <div className="flex flex-col h-screen justify-center items-center">
       <div className="flex flex-row gap-10">
-        <div className="flex flex-col gap-4 items-center bg-[#4f3824] p-4 rounded">
-          <text>Create Room</text>
-          <button className="bg-[#d1603d] text-white p-2 rounded">Create</button>
+        <div className="flex flex-col gap-4 items-center bg-[#292929] p-4 rounded">
+          <p>Create Room</p>
+          <button
+            onClick={() => {
+              createRoom();
+            }}
+            className="bg-[#fb7e14] text-white p-2 rounded"
+          >
+            Create
+          </button>
         </div>
-        <div className="flex flex-col gap-4 items-center bg-[#4f3824] p-4 rounded">
-          <text>Join Room</text>
+        <div className="flex flex-col gap-4 items-center bg-[#292929] p-4 rounded">
+          <p>Join Room</p>
           <div className="flex flex-row gap-4 items-center">
             <input className="rounded-lg p-2 w-full text-black"></input>
             <button
@@ -52,7 +60,7 @@ function RoomMenu({ setRoom }: RoomMenuProps) {
                 const roomId = inputElement ? inputElement.value : '';
                 getRoom(roomId);
               }}
-              className="bg-[#d1603d] text-white p-2 rounded"
+              className="bg-[#fb7e14] text-white p-2 rounded"
             >
               Join
             </button>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Room } from './RoomMenu';
 
-function Chat() {
+function Chat(room: Room) {
   console.log(window.ipcRenderer);
 
   const [messages, setMessages] = useState<string[]>([]);
@@ -11,10 +12,10 @@ function Chat() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <div className="h-full w-full">
         {messages.map((message, index) => (
-          <div key={index} className="bg-[#ddb967] p-4 m-4 rounded-lg text-black w-fit">
+          <div key={index} className="bg-[#292929] p-4 m-4 rounded-lg w-fit">
             {message}
           </div>
         ))}
@@ -29,7 +30,7 @@ function Chat() {
               input.value = '';
             }
           }}
-          className="bg-[#d1603d] text-white p-2 rounded"
+          className="bg-[#fb7e14] text-white p-2 rounded"
         >
           Send
         </button>
