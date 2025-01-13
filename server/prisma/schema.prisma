@@ -11,12 +11,12 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    Int       @id @default(autoincrement())
   name  String?
-  posts Post[]
+  posts Message[]
 }
 
-model Post {
+model Message {
   id       Int    @id @default(autoincrement())
   message  String
   author   User   @relation(fields: [authorId], references: [id])
@@ -26,7 +26,7 @@ model Post {
 }
 
 model Room {
-  id    String @id @default(cuid())
+  id    String    @id @default(cuid())
   name  String
-  posts Post[]
+  posts Message[]
 }

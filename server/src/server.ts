@@ -1,6 +1,7 @@
 import express from "express";
 import { createRoom, getRoom } from "./room";
 import { createUser, getUser } from "./user";
+import { getRoomMessages, getRoomUpdates, sendMessage } from "./message";
 
 const app = express();
 
@@ -37,6 +38,37 @@ app.get("/user", async (req, res) => {
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ error: "Failed to get user, please try again." + error });
+    }
+});
+
+app.post("/message", async (req, res) => {
+    try {
+        const message = await sendMessage({
+            roomId: req.query.roomId as string,
+            authorId: req.query.authorId as unknown as number,
+            message: req.query.message as string,
+        });
+        res.status(201).json(message);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to send message, please try again." + error });
+    }
+});
+
+app.get("/roomUpdates", async (req, res) => {
+    try {
+        const messages = await getRoomUpdates(req.query.roomId as string, req.query.lastMessageId as unknown as number);
+        res.status(200).json(messages);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get room updates, please try again." + error });
+    }
+});
+
+app.get("/roomMessages", (req, res) => {
+    try {
+        const messages = await getRoomMessages(req.query.roomId as string);
+        res.status(200).json(messages);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to get room messages, please try again." + error });
     }
 });
 
