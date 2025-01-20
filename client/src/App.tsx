@@ -4,26 +4,25 @@ import Chat from './Chat';
 import RoomMenu, { Room } from './RoomMenu';
 import { BrowserWindow } from 'electron';
 import Layout from './Layout';
+import UserMenu, { User } from './UserMenu';
 
 function App() {
   console.log(window.ipcRenderer);
 
   const [room, setRoom] = useState<Room>({ id: '', name: '' });
+  const [user, setUser] = useState<User>({ id: 0, name: '' });
 
   useEffect(() => {
     window.Main.removeLoading();
   }, []);
 
-  /* colors
-  #221d23
-  #4f3824
-  #d1603d
-  #ddb967
-  #d0e37f
-  https://coolors.co/221d23-4f3824-d1603d-ddb967-d0e37f
-  */
-
-  return <div className="bg-[#000000]">{room.id ? <Layout {...room} /> : <RoomMenu setRoom={setRoom} />}</div>;
+  if (!room.id) {
+    return <RoomMenu setRoom={setRoom} />;
+  } else if (!user.id) {
+    return <UserMenu setUser={setUser} />;
+  } else {
+    return <Layout room={room} user={user} />;
+  }
 }
 
 export default App;
