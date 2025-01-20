@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-const API_URL = 'https://api.example.com';
+const API_URL = 'http://localhost:5252';
 
 interface ApiResponse<T> {
   data: T;

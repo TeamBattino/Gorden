@@ -33,7 +33,7 @@ function createWindow() {
     window?.loadFile(url);
   }
   // Open the DevTools.
-  // window.webContents.openDevTools();
+  window.webContents.openDevTools();
 
   // For AppBar
   ipcMain.on('minimize', () => {
