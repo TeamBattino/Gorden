@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Room } from './RoomMenu';
 import { User } from './UserMenu';
-import { getRequest } from './Api';
+import { getRequest, postRequest } from './Api';
 
 interface ChatMenuProps {
   room: Room;
@@ -17,18 +17,82 @@ interface Message {
 function Chat({ room, user }: ChatMenuProps) {
   console.log(window.ipcRenderer);
 
+  const getRoomMessages = async (roomId: string) => {
+    const response = await getRequest<Message[]>(`/roomMessages?roomId=${roomId}`);
+    console.log(response);
+
+    if (response.status === 200) {
+      setMessages(response.data);
+      return response.data;
+    }
+    return [];
+  };
+
+  const getRoomUpdates = async (roomId: string) => {
+    const lastMessageId = messages[messages.length - 1].authorId;
+    const response = await getRequest<Message[]>(`/roomUpdates?roomId=${roomId}&lastMessageId=${lastMessageId}`);
+    console.log(response);
+
+    if (response.status === 200) {
+      setMessages([...messages, ...response.data]);
+      response.data.forEach((message) => {
+        getUserName(message.authorId);
+      });
+    }
+  };
+
+  const sendMessage = async (message: Message) => {
+    const response = await postRequest<Message>(
+      `/message?roomId=${message.roomId}&authorId=${message.authorId}&message=${message.message}`
+    );
+
+    if (response.status === 201) {
+      setMessages([...messages, message]);
+    }
+  };
+
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const [userMap, setUserMap] = useState<{ [key: number]: String }>({});
+
+  const getUserName = async (userId: number) => {
+    if (!userMap[userId]) {
+      console.log('Getting user name:', userId);
+      const response = await getRequest<User>(`/user?id=${userId}`);
+      console.log(response);
+
+      if (response.status === 200) {
+        setUserMap((prevUserMap) => ({ ...prevUserMap, [userId]: response.data.name }));
+        return response.data.name;
+      }
+    }
+    return userMap[userId];
+  };
+
   useEffect(() => {
+    getRoomMessages(room.id).then((messages) => {
+      messages.forEach((message) => {
+        getUserName(message.authorId);
+      });
+    });
+    setUserMap((prevUserMap) => ({ ...prevUserMap, [user.id]: 'You' }));
     window.Main.removeLoading();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getRoomUpdates(room.id);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  });
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="h-full w-full">
+    <div className="flex flex-col min-h-screen">
+      <div className="h-full w-full overflow-y-auto">
         {messages.map((message, index) => (
-          <div key={index} className="bg-[#292929] p-4 m-4 rounded-lg w-fit">
-            {message.authorId + '\n'}
+          <div key={message.authorId} className="bg-[#292929] p-4 m-4 rounded-lg w-fit">
+            <div className="text-[#fb7e14]">{userMap[message.authorId] || 'Loading ...'}</div>
             {message.message}
           </div>
         ))}
@@ -38,11 +102,11 @@ function Chat({ room, user }: ChatMenuProps) {
         <button
           onClick={() => {
             const input = document.querySelector('input');
-            if (input && input.value) {
+            if (input?.value) {
               console.log('Sending message:', input.value);
               console.log('Room:', room.id);
               console.log('User:', user.id);
-              setMessages([...messages, { roomId: room.id, authorId: user.id, message: input.value }]);
+              sendMessage({ roomId: room.id, authorId: user.id, message: input.value });
               input.value = '';
             }
           }}
