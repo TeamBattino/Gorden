@@ -1,4 +1,4 @@
-import prisma from "@lib/database";
+import { BaseService } from "./baseService";
 
 interface Message {
   roomId: string;
@@ -6,15 +6,15 @@ interface Message {
   message: string;
 }
 
-export class MessageService {
+export class MessageService extends BaseService {
   async sendMessage(message: Message) {
-    return prisma.message.create({
+    return this.prisma.message.create({
       data: message,
     });
   }
 
   async getRoomMessages(roomId: string) {
-    return prisma.message.findMany({
+    return this.prisma.message.findMany({
       where: {
         roomId: roomId,
       },
@@ -25,7 +25,7 @@ export class MessageService {
   }
 
   async getRoomUpdates(roomId: string, lastMessageId: number) {
-    return prisma.message.findMany({
+    return this.prisma.message.findMany({
       where: {
         roomId: roomId,
         id: {

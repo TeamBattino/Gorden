@@ -1,8 +1,8 @@
-import prisma from "@lib/database";
+import { BaseService } from "./baseService";
 
-export class UserService {
+export class UserService extends BaseService {
   async createUser(name: string) {
-    const user = await prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         name: name,
       },
@@ -11,7 +11,7 @@ export class UserService {
   }
 
   async getUser(userId: number) {
-    const user = await prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         id: userId,
       },

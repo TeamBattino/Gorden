@@ -1,9 +1,9 @@
-import prisma from "@lib/database";
+import { BaseService } from "./baseService";
 import { faker } from "@faker-js/faker";
 
-export class RoomService {
+export class RoomService extends BaseService {
   async createRoom() {
-    const room = await prisma.room.create({
+    const room = await this.prisma.room.create({
       data: {
         id: faker.string.alpha({ length: 6, casing: 'lower' }),
         name: faker.color.human() + " " + faker.animal.type(),
@@ -13,7 +13,7 @@ export class RoomService {
   }
 
   async getRoom(roomId: string) {
-    const room = await prisma.room.findUnique({
+    const room = await this.prisma.room.findUnique({
       where: {
         id: roomId,
       },
