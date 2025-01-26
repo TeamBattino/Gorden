@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Room } from './RoomMenu';
-import { User } from './UserMenu';
 import { getRequest, postRequest } from './Api';
+import { Message } from 'postcss';
+import { AppContext } from './Context';
+import { User } from './types';
 
-interface ChatMenuProps {
-  room: Room;
-  user: User;
-}
+function Chat() {
+  const { user, room } = React.useContext(AppContext);
 
-interface Message {
-  roomId: string;
-  authorId: number;
-  message: string;
-}
+  const [messages, setMessages] = useState<Message[]>([]);
 
-function Chat({ room, user }: ChatMenuProps) {
-  console.log(window.ipcRenderer);
+  const [userMap, setUserMap] = useState<{ [key: number]: string }>({});
 
   const getRoomMessages = async (roomId: string) => {
     const response = await getRequest<Message[]>(`/roomMessages?roomId=${roomId}`);
@@ -51,10 +45,6 @@ function Chat({ room, user }: ChatMenuProps) {
     }
   };
 
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const [userMap, setUserMap] = useState<{ [key: number]: String }>({});
-
   const getUserName = async (userId: number) => {
     if (!userMap[userId]) {
       console.log('Getting user name:', userId);
@@ -70,50 +60,64 @@ function Chat({ room, user }: ChatMenuProps) {
   };
 
   useEffect(() => {
-    getRoomMessages(room.id).then((messages) => {
-      messages.forEach((message) => {
-        getUserName(message.authorId);
+    if (room) {
+      getRoomMessages(room.id).then((messages) => {
+        messages.forEach((message) => {
+          getUserName(message.authorId);
+        });
       });
-    });
-    setUserMap((prevUserMap) => ({ ...prevUserMap, [user.id]: 'You' }));
+    }
+    if (user) {
+      setUserMap((prevUserMap) => ({ ...prevUserMap, [user.id]: `You (Id: ${user.id})` }));
+    }
     window.Main.removeLoading();
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      getRoomUpdates(room.id);
+      if (room && messages.length > 0) {
+        getRoomUpdates(room.id);
+      }
     }, 1000);
 
     return () => clearInterval(interval);
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="h-full w-full overflow-y-auto">
-        {messages.map((message, index) => (
-          <div key={message.authorId} className="bg-[#292929] p-4 m-4 rounded-lg w-fit">
-            <div className="text-[#fb7e14]">{userMap[message.authorId] || 'Loading ...'}</div>
-            {message.message}
-          </div>
-        ))}
+    <div className="flex flex-col h-screen">
+      <div className="bg-hollow-gray absolute h-24 w-full items-center flex justify-between px-4 text-2xl font-bold">
+        <div className="text-3xl">{room?.name}</div>
+        <div>
+          <div className="text-sm">Room ID:</div>
+          <div className="text-hollow-orange">{room?.id}</div>
+        </div>
       </div>
-      <div className="w-full flex p-10 gap-5 h-35">
-        <input className="rounded-lg p-2 mb-4 w-full h-full text-black"></input>
-        <button
-          onClick={() => {
-            const input = document.querySelector('input');
-            if (input?.value) {
-              console.log('Sending message:', input.value);
-              console.log('Room:', room.id);
-              console.log('User:', user.id);
-              sendMessage({ roomId: room.id, authorId: user.id, message: input.value });
-              input.value = '';
-            }
-          }}
-          className="bg-[#fb7e14] text-white p-2 rounded"
-        >
-          Send
-        </button>
+      <div className="flex flex-col min-h-screen bg-hollow-black">
+        <div className="h-full w-full overflow-y-auto">
+          {messages.map((message, index) => (
+            <div key={message.authorId} className="bg-hollow-gray p-4 m-4 rounded-lg w-fit">
+              <div className="text-hollow-orange">{userMap[message.authorId] || 'Loading ...'}</div>
+              {message.message}
+            </div>
+          ))}
+        </div>
+        <div className="w-full flex p-10 gap-5 h-35">
+          <input className="rounded-lg p-2 mb-4 w-full h-full text-hollow-black"></input>
+          <button
+            onClick={() => {
+              const input = document.querySelector('input');
+              if (input?.value) {
+                if (room && user) {
+                  sendMessage({ roomId: room.id, authorId: user.id, message: input.value, type: 'text' });
+                }
+                input.value = '';
+              }
+            }}
+            className="bg-hollow-orange text-hollow-white p-2 rounded"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
