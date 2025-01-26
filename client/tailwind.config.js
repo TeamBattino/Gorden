@@ -8,7 +8,12 @@ export default withMT({
     extend: {
       colors: {
         'slate-800': 'rgb(30 41 59)',
-        'slate-900': 'rgb(15 23 42)'
+        'slate-900': 'rgb(15 23 42)',
+        'hollow-black': '#000000',
+        'hollow-gray': '#151515',
+        'hollow-dirt': '#292929',
+        'hollow-white': ' #fafbf6',
+        'hollow-orange': '#fb7e14',
       }
     }
   },
