@@ -8,13 +8,7 @@ function App() {
   return (
     <AppContextProvider>
       <AppContext.Consumer>
-        {({ user, room }) => (
-          <>
-            {room === null && <RoomSelector />}
-            {room !== null && user === null && <UserSelector />}
-            {user !== null && room !== null && <Chat />}
-          </>
-        )}
+        {({ user, room }) => (room === null ? <RoomSelector /> : user === null ? <UserSelector /> : <Chat />)}
       </AppContext.Consumer>
     </AppContextProvider>
   );
