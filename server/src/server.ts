@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import { RoomService } from "./room";
-import { UserService } from "./user";
-import { MessageService } from "./message";
+import { RoomService } from "./services/roomService";
+import { UserService } from "./services/userService";
+import { MessageService } from "./services/messageService";
 
 class Server {
   private app: express.Application;
