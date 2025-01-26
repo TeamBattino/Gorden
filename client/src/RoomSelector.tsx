@@ -11,8 +11,6 @@ function RoomSelector() {
 
     if (response.status === 200) {
       setRoom(response.data);
-    } else {
-      throw new Error('Room not found');
     }
   };
 
@@ -21,8 +19,6 @@ function RoomSelector() {
 
     if (response.status === 201) {
       setRoom(response.data);
-    } else {
-      throw new Error('Room not created');
     }
   };
 

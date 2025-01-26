@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getRequest, postRequest } from './Api';
-import { Message } from 'postcss';
 import { AppContext } from './Context';
-import { User } from './types';
+import { Message, User } from './types';
 
 function Chat() {
   const { user, room } = React.useContext(AppContext);
@@ -108,7 +107,7 @@ function Chat() {
               const input = document.querySelector('input');
               if (input?.value) {
                 if (room && user) {
-                  sendMessage({ roomId: room.id, authorId: user.id, message: input.value, type: 'text' });
+                  sendMessage({ roomId: room.id, authorId: user.id, message: input.value });
                 }
                 input.value = '';
               }

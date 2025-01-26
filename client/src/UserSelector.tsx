@@ -11,8 +11,6 @@ function UserSelector() {
 
     if (response.status === 200) {
       setUser(response.data);
-    } else {
-      throw new Error('User not found');
     }
   };
 
@@ -22,8 +20,6 @@ function UserSelector() {
 
     if (response.status === 201) {
       setUser(response.data);
-    } else {
-      throw new Error('User not created');
     }
   };
 
