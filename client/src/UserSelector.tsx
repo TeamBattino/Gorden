@@ -7,7 +7,7 @@ function UserSelector() {
   const { setUser } = React.useContext(AppContext);
 
   const getRoom = async (userId: string) => {
-    const response = await getRequest<User>(`/user?id=${userId}`);
+    const response = await getRequest<User>(`/users?id=${userId}`);
 
     if (response.status === 200) {
       setUser(response.data);
@@ -15,8 +15,7 @@ function UserSelector() {
   };
 
   const createUser = async (name: string) => {
-    const response = await postRequest<User>(`/user?name=${name}`);
-    console.log(response);
+    const response = await postRequest<User>('/users', { name });
 
     if (response.status === 201) {
       setUser(response.data);

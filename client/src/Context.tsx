@@ -3,9 +3,9 @@ import { Room, User } from './types';
 
 type ContextState = {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   room: Room | null;
-  setRoom: (room: Room) => void;
+  setRoom: (room: Room | null) => void;
 };
 
 const contextDefaultValues: ContextState = {

@@ -4,10 +4,10 @@ import { Room } from './types';
 import { AppContext } from './Context';
 
 function RoomSelector() {
-  const { room, setRoom } = React.useContext(AppContext);
+  const { setRoom } = React.useContext(AppContext);
 
   const getRoom = async (roomId: string) => {
-    const response = await getRequest<Room>(`/room?id=${roomId}`);
+    const response = await getRequest<Room>(`/rooms?id=${roomId}`);
 
     if (response.status === 200) {
       setRoom(response.data);
@@ -15,7 +15,7 @@ function RoomSelector() {
   };
 
   const createRoom = async () => {
-    const response = await postRequest<Room>('/room');
+    const response = await postRequest<Room>('/rooms');
 
     if (response.status === 201) {
       setRoom(response.data);
@@ -31,12 +31,7 @@ function RoomSelector() {
       <div className="flex flex-row gap-10">
         <div className="flex flex-col gap-4 items-center bg-hollow-gray p-4 rounded">
           <p>Create Room</p>
-          <button
-            onClick={() => {
-              createRoom();
-            }}
-            className="bg-hollow-orange text-hollow-white p-2 rounded"
-          >
+          <button onClick={createRoom} className="bg-hollow-orange text-hollow-white p-2 rounded">
             Create
           </button>
         </div>
