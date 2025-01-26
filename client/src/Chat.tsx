@@ -17,6 +17,10 @@ interface Message {
 function Chat({ room, user }: ChatMenuProps) {
   console.log(window.ipcRenderer);
 
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const [userMap, setUserMap] = useState<{ [key: number]: String }>({});
+
   const getRoomMessages = async (roomId: string) => {
     const response = await getRequest<Message[]>(`/roomMessages?roomId=${roomId}`);
     console.log(response);
@@ -51,10 +55,6 @@ function Chat({ room, user }: ChatMenuProps) {
     }
   };
 
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const [userMap, setUserMap] = useState<{ [key: number]: String }>({});
-
   const getUserName = async (userId: number) => {
     if (!userMap[userId]) {
       console.log('Getting user name:', userId);
@@ -88,17 +88,17 @@ function Chat({ room, user }: ChatMenuProps) {
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-hollow-black">
       <div className="h-full w-full overflow-y-auto">
         {messages.map((message, index) => (
-          <div key={message.authorId} className="bg-[#292929] p-4 m-4 rounded-lg w-fit">
-            <div className="text-[#fb7e14]">{userMap[message.authorId] || 'Loading ...'}</div>
+          <div key={message.authorId} className="bg-hollow-gray p-4 m-4 rounded-lg w-fit">
+            <div className="text-hollow-orange">{userMap[message.authorId] || 'Loading ...'}</div>
             {message.message}
           </div>
         ))}
       </div>
       <div className="w-full flex p-10 gap-5 h-35">
-        <input className="rounded-lg p-2 mb-4 w-full h-full text-black"></input>
+        <input className="rounded-lg p-2 mb-4 w-full h-full text-hollow-black"></input>
         <button
           onClick={() => {
             const input = document.querySelector('input');
@@ -110,7 +110,7 @@ function Chat({ room, user }: ChatMenuProps) {
               input.value = '';
             }
           }}
-          className="bg-[#fb7e14] text-white p-2 rounded"
+          className="bg-hollow-orange text-hollow-white p-2 rounded"
         >
           Send
         </button>

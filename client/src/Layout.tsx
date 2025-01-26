@@ -20,11 +20,11 @@ function Layout({ room, user }: LayoutMenuProps) {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="bg-[#151515] h-24 w-full items-center flex justify-between px-4 text-2xl font-bold">
+      <div className="bg-hollow-gray absolute h-24 w-full items-center flex justify-between px-4 text-2xl font-bold">
         <div className="text-3xl">{room.name}</div>
         <div>
           <div className="text-sm">Room ID:</div>
-          <div className="text-[#fb7e14]">{room.id}</div>
+          <div className="text-hollow-orange">{room.id}</div>
         </div>
       </div>
       <Chat room={room} user={user} />
