@@ -1,4 +1,3 @@
-import prisma from "@lib/database";
 import { faker } from "@faker-js/faker";
 import { BaseService } from "./baseService";
 import { Creatable, Readable } from "../interfaces";
