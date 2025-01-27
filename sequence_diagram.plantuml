@@ -1,0 +1,43 @@
+@startuml
+skinparam componentStyle uml2
+package Frontend #DDDDDD {
+  [App]
+  [Chat]
+  [RoomSelector]
+  [UserSelector]
+  [Api]
+}
+
+package Backend #EEEEEE {
+  [Server]
+  package Services #FFFFFF {
+    [RoomService]
+    [UserService]
+    [MessageService]
+    [WebSocketService]
+  }
+  database Database
+}
+
+[App] --|> [Chat]
+[App] --|> [RoomSelector]
+[App] --|> [UserSelector]
+[Chat] ..> [Api] : uses
+[RoomSelector] ..> [Api] : uses
+[UserSelector] ..> [Api] : uses
+
+[Server] --|> [RoomService]
+[Server] --|> [UserService]
+[Server] --|> [MessageService]
+[Server] --|> [WebSocketService]
+[WebSocketService] --|> [MessageService]
+[MessageService] --> Database
+
+[Api] --[#blue]-> [Server] : HTTP
+[Chat] --[#green]-> [WebSocketService] : WebSocket
+
+Frontend -[#red]- Backend : communicates
+
+center footer PlantUML Class Diagram
+endfooter
+@enduml
